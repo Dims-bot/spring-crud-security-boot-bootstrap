@@ -12,6 +12,9 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.Set;
 
+import static com.javamentor.springcrudsecuritybootfrom1.Model.ERole.ROLE_ADMIN;
+import static com.javamentor.springcrudsecuritybootfrom1.Model.ERole.ROLE_USER;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -49,7 +52,7 @@ public class User {
     @Min(value = 0, message = "The age cannot be less than 0.")
     private int age;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -75,5 +78,22 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
+    }
+
+    public String getUserRolesPrefixFree() {
+        StringBuilder rolePrefixFree = new StringBuilder();
+        for (Role role : this.roles) {
+            if ((role.getRole()).equals(ROLE_ADMIN)) {
+                rolePrefixFree.append("ADMIN");
+            } else {
+                rolePrefixFree.append("USER");
+            }
+        }
+//        StringBuilder rolePrefixFree = roles.stream()
+//                .filter(ROLE_USER::equals)
+//                .collect()
+//                .map((role) -> role.getRole())
+//                .
+        return rolePrefixFree.toString();
     }
 }

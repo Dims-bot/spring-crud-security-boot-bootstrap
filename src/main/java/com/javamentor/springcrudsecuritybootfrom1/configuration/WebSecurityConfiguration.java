@@ -56,6 +56,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 formLogin()
 
                 .loginPage("/login")
+                .failureUrl("/login-error")
                 .successHandler(new LoginSuccessHandler())
                 .usernameParameter("username")
                 .passwordParameter("password")

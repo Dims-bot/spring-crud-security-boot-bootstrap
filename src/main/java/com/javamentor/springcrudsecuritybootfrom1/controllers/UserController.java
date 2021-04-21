@@ -2,46 +2,70 @@ package com.javamentor.springcrudsecuritybootfrom1.controllers;
 
 import com.javamentor.springcrudsecuritybootfrom1.Model.User;
 import com.javamentor.springcrudsecuritybootfrom1.service.UserServiceImpl;
+import com.javamentor.springcrudsecuritybootfrom1.transferObject.NewUserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @Controller
 public class UserController {
 
-    UserServiceImpl userService;
+    private UserServiceImpl userService;
 
     @Autowired
     public UserController(UserServiceImpl userService) {
         this.userService = userService;
     }
 
-        @GetMapping("/login")
-    public String loginError (Model model) {
+    @GetMapping("/login-error")
+    public String loginError(Model model) {
         model.addAttribute("loginError", true);
 
         return "login";
     }
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
 
     @GetMapping("/users/admin")
-    public String getAllUsers(Model model) {
-        model.addAttribute("users", userService.getAllUsers());
+    public String getAllUsers(ModelMap modelMap,Principal principal) {
+        User user = userService.getUserByUsername(principal.getName());
+
+        modelMap.addAttribute("users", userService.getAllUsers());
+        modelMap.addAttribute("principalUsername", principal.getName());
+        modelMap.addAttribute("user", userService.getUserByUsername(principal.getName()));
+        modelMap.addAttribute("userRolesPrefixFree", user.getUserRolesPrefixFree());
+
 
         return "getAllUsers";
     }
 
+    @GetMapping("/users/admin/new")
+    public String newUser(Model model, Principal principal) {
+        model.addAttribute("user", new User());
+        model.addAttribute("principalUsername", principal.getName());
+        //model.addAttribute("userPrincipal", userService.getUserByUsername(principal.getName()));
+        model.addAttribute("roles", userService.getUserByUsername(principal.getName()).getUserRolesPrefixFree());
+
+        return "newUser";
+    }
+
     @PatchMapping("/users/admin/{id}")
-    public String updateUserById(@ModelAttribute("user") @Valid User user,
+    public String updateUserById(@ModelAttribute("user") @Valid NewUserRequest user,
                                  BindingResult bindingResult, @PathVariable("id") Long id) {
         if (bindingResult.hasErrors())
-            return "edit";
+            return "redirect:/users/admin";
 
         userService.updateUser(id, user);
-        return "edit";
+        return "redirect:/users/admin";
     }
 
     @GetMapping("/users/admin/{id}/edit")
@@ -57,20 +81,33 @@ public class UserController {
         return "getUserByID";
     }
 
-    @GetMapping("/users/admin/new")
-    public String newUser(Model model) {
-        model.addAttribute("user", new User());
 
-        return "newUser";
-    }
 
     @PostMapping("/users/admin")
-    public String createNewUser(@ModelAttribute("user") @Valid User user,
+    public String createNewUser(@ModelAttribute("user") @Valid NewUserRequest newUserRequest,
                                 BindingResult bindingResult) {
         if (bindingResult.hasErrors())
-            return "newUser";
-        userService.save(user);
 
+           return "newUser";
+        //return "redirect:/users/admin/new";
+            userService.save(newUserRequest);
+
+        return "redirect:/users/admin";
+    }
+
+
+    @GetMapping("/users/user")
+    public String getUserByLogin(ModelMap modelMap, Principal principal) {
+        User user = userService.getUserByUsername(principal.getName());
+
+        modelMap.addAttribute("user", userService.getUserByUsername(principal.getName()));
+        modelMap.addAttribute("userRolesPrefixFree", user.getUserRolesPrefixFree());
+
+        return "user";
+    }
+    @DeleteMapping("/users/admin/{id}")
+    public String deleteUserById(@PathVariable("id") Long id) {
+        userService.deleteUser(id);
         return "redirect:/users/admin";
     }
 

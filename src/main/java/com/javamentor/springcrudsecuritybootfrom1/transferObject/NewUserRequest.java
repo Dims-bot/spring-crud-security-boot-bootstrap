@@ -22,8 +22,7 @@ public class NewUserRequest {
 
     private String roles;
 
-    @Size(min = 5, max = 100, message ="Minimum 5 and maximum 15 characters")
+    //@Size(min = 5, max = 100, message ="Minimum 5 and maximum 15 characters")
     private String password;
-
 
 }

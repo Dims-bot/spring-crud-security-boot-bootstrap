@@ -125,7 +125,7 @@
                                 th:attrappend="data-bs-target=${user.id }">Edit
                         </button>
 
-                        <div class="myForm">
+                        <div class="myFormUpdate">
                             <form th:action="@{/users/admin/{id}(id=${user.getId()})}" th:method="PATCH"
                                   th:object="${user}">
                                 <div class="modal" id="edit"
@@ -203,12 +203,13 @@
                                                     <label for="password" class="form-control-label"
                                                            style="font-weight: bold">Password </label>
                                                     <input type="text" id="password" name="password"
-                                                           th:value="${user.password}"
+
                                                            class="form-control"/>
-                                                    <div style="color:red" th:if="${#fields.hasErrors('password')}"
-                                                         th:errors="*{password}">
-                                                        Password error
-                                                    </div>
+<!--                                                    th:value="${user.password}"-->
+<!--                                                    <div style="color:red" th:if="${#fields.hasErrors('password')}"-->
+<!--                                                         th:errors="*{password}">-->
+<!--                                                        Password error-->
+<!--                                                    </div>-->
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="roles" class="form-control-label"
@@ -241,15 +242,11 @@
                                 type="button"
                                 data-bs-toggle="modal"
                                 data-bs-target="#delete"
-                                style="color: white; background-color: #2996ac; border-color:#2996ac"
+                                style="color: white; background-color:red; border-color:red"
                                 th:attrappend="data-bs-target=${user.id }">Delete
                         </button>
-                        <!--                        <form th:action="@{/users/admin/{id}(id=${user.getId()})}" th:method="DELETE">-->
-                        <!--                            <button class="btn btn-primary"-->
-                        <!--                                    style="color: white; background-color: red; border-color: red">Delete-->
-                        <!--                            </button>-->
-                        <!--                        </form>-->
-                        <div class="myForm">
+
+                        <div class="myFormDelete">
                             <form th:action="@{/users/admin/{id}(id=${user.getId()})}" th:method="DELETE">
                                 <div class="modal" id="delete"
                                      tabindex="-1"
@@ -280,10 +277,7 @@
                                                     <input type="text" th:value="${user.firstName}" id="firstName"
                                                            name="firstName"
                                                            class="form-control" readonly/>
-                                                    <div style="color:red" th:if="${#fields.hasErrors('firstName')}"
-                                                         th:errors="*{firstName}">
-                                                        FirstName error
-                                                    </div>
+
                                                 </div>
 
                                                 <div class="form-group">
@@ -291,21 +285,14 @@
                                                            style="font-weight: bold">Last name </label>
                                                     <input type="text" th:value="${user.lastName}" id="lastName"
                                                            name="lastName"
-                                                           class="form-control"/>
-                                                    <div style="color:red" th:if="${#fields.hasErrors('lastName')}"
-                                                         th:errors="*{lastName}">
-                                                        LastName error
-                                                    </div>
+                                                           class="form-control" readonly/>
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label for="age" class="form-control-label"
                                                            style="font-weight: bold">Age </label>
                                                     <input type="number" th:value="${user.age}" id="age" name="age"
-                                                           class="form-control"/>
-                                                    <div style="color:red" th:if="${#fields.hasErrors('age')}"
-                                                         th:errors="*{age}">Age error
-                                                    </div>
+                                                           class="form-control" readonly/>
                                                 </div>
 
                                                 <div class="form-group">
@@ -313,31 +300,16 @@
                                                            style="font-weight: bold">Username </label>
                                                     <input type="text" th:value="${user.username}" id="username"
                                                            name="username"
-                                                           class="form-control"/>
-                                                    <div style="color:red" th:if="${#fields.hasErrors('username')}"
-                                                         th:errors="*{username}">
-                                                        UserName error
-                                                    </div>
+                                                           class="form-control" readonly/>
 
                                                 </div>
 
-                                                <div class="form-group">
-                                                    <label for="password" class="form-control-label"
-                                                           style="font-weight: bold">Password </label>
-                                                    <input type="text" id="password" name="password"
-                                                           th:value="${user.password}"
-                                                           class="form-control"/>
-                                                    <div style="color:red" th:if="${#fields.hasErrors('password')}"
-                                                         th:errors="*{password}">
-                                                        Password error
-                                                    </div>
-                                                </div>
                                                 <div class="form-group">
                                                     <label for="roles" class="form-control-label"
                                                            style="font-weight: bold">Role</label>
                                                     <select multiple class="form-control" id="roles" name="roles"
                                                             style="height: 50px"
-                                                            type="text">
+                                                            type="text" readonly="">
                                                         <option value="ADMIN" style="font-size: small">ADMIN</option>
                                                         <option value="USER" style="font-size: small">USER</option>
                                                     </select>
@@ -347,7 +319,7 @@
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                                                     Close
                                                 </button>
-                                                <input type="submit" class="btn btn-primary" value="Edit"/>
+                                                <input type="submit" style="background-color: red; border-color: red"  class="btn btn-primary" value="Delete"/>
 
                                             </div>
                                         </div>

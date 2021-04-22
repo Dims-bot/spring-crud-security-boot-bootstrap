@@ -59,7 +59,7 @@ public class UserController {
     }
 
     @PatchMapping("/users/admin/{id}")
-    public String updateUserById(@ModelAttribute("user") @Valid NewUserRequest user,
+    public String updateUserById(@ModelAttribute("user") @Valid  NewUserRequest user,
                                  BindingResult bindingResult, @PathVariable("id") Long id) {
         if (bindingResult.hasErrors())
             return "redirect:/users/admin";
@@ -102,6 +102,7 @@ public class UserController {
 
         modelMap.addAttribute("user", userService.getUserByUsername(principal.getName()));
         modelMap.addAttribute("userRolesPrefixFree", user.getUserRolesPrefixFree());
+        modelMap.addAttribute("principalUsername", principal.getName());
 
         return "user";
     }

@@ -23,7 +23,6 @@ import java.util.Set;
 @Component
 public class RepositoryImpl {
 
-
     @PersistenceContext
     private EntityManager em;
 
@@ -41,13 +40,6 @@ public class RepositoryImpl {
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
     }
-
-//    @Autowired
-//    public RepositoryImpl(UserRepository userRepository,PasswordEncoder passwordEncoder) {
-//        this.userRepository = userRepository;
-//        this.passwordEncoder = passwordEncoder;
-//    }
-
 
     public List<User> getAllUsers() {
         List<User> users = userRepository.getAllUsers();
@@ -91,7 +83,8 @@ public class RepositoryImpl {
             roles.add(userRole);
         }
         user.setRoles(roles);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        //user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(newUserRequest.getPassword());
 
         userRepository.save(user);
     }
@@ -112,19 +105,19 @@ public class RepositoryImpl {
                     .findByRole(ERole.ROLE_ADMIN)
                     .orElseThrow(() -> new RuntimeException("Error, Role ADMIN is not found"));
             roles.add(adminRole);
-        } else {
+            userToBeUpdated.setRoles(roles);
+        } if ("USER".equals(rolesForSave)){
             Role userRole = roleRepository
                     .findByRole(ERole.ROLE_USER)
                     .orElseThrow(() -> new RuntimeException("Error, Role USER is not found"));
             roles.add(userRole);
+            userToBeUpdated.setRoles(roles);
         }
-        userToBeUpdated.setRoles(roles);
 
-        userToBeUpdated.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
-
-
+        if ((updatedUser.getPassword()).length() > 1) {
+            userToBeUpdated.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+        }
         userRepository.save(userToBeUpdated);
-
     }
 
     public void deleteUser(Long id) {

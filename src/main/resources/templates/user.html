@@ -1,24 +1,175 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>User</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css"/>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous">
+
+    <title>User panel</title>
+
+
 </head>
+
 <body>
-<p th:text="${'Username: ' + user.getUsername()}">VALUE</p>
-<p th:text="${'First Name: ' + user.getFirstName()}">VALUE</p>
-<p th:text="${'Last name: ' + user.getLastName()}">VALUE</p>
-<p th:text="${'Age: ' + user.getAge()}">VALUE</p>
-<p th:text="${'ID: ' + user.getId()}">VALUE</p>
-<p th:text="${'Roles: ' + userRolesPrefixFree}">VALUE</p>
+<div class="nav-bar navbar-dark bg-dark shadow-sm">
+    <div id="header" class="container1" style="padding: 10px">
+        <div style="color: white; font-size: 20px; font-weight: bold">
+            <span th:text="${principalUsername}">Username current login user
+            </span>
+            <span th:text="${'with roles: ' + userRolesPrefixFree}"
+                  style="color: white; font-size: 15px; font-weight: normal">roles of current login user
+            </span>
+
+        </div>
+        <form th:action="@{/logout}" method="post">
+            <button class="btn btn-dark">Logout</button>
+        </form>
+
+    </div>
+
+</div>
+<div class="container-fluid">
+    <div class="col-md-2" style="height: 100%">
+        <div class="container2" style="width: 100%">
+
+            <dif sec:authorize="hasRole('ROLE_ADMIN')">
+                <form th:action="@{/users/admin}" method="get">
+                    <button class="btn btn-primary btn-block" style="color:#0d6efd;
+                         background-color: white; border-color: white; width: 100%; margin-top: 15px">Admin
+                    </button>
+                </form>
+            </dif>
 
 
-<br/>
-<br>
+            <button class="btn btn-primary btn-block active" style="margin-top: 10px">User
+            </button>
 
-<form th:action="@{/logout}" method="post">
-    <input type="submit" value="Logout"/>
-</form>
+
+        </div>
+
+    </div>
+    <div class="col-md-10" style="background-color: #eff2f5; height: 550px">
+
+
+        <h2 style="margin-top: 17px; margin-left: 15px">User information-page</h2>
+
+        <div class="border"
+             style="margin-left: 15px; margin-top: 0px; background-color: #e1e3e6; border-color: #929eaa; margin-right: 20px">
+            <h4 style="margin: 20px 20px 20px 15px;">
+                About user
+            </h4>
+
+        </div>
+
+        <div class="container3" style="margin-right: 35px; margin-left: 15px; background-color: white">
+            <table class="table table-striped" style="margin-right: 20px; margin-top: 0px">
+                <thead>
+                <tr style="border-bottom-color: white; border-top-color: #929eaa">
+                    <th scope="col">ID</th>
+                    <th scope="col">First name</th>
+                    <th scope="col">Last name</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">User role</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <tr>
+
+                    <td
+                            th:text="${user.getId()}">Id
+                    </td>
+                    <td
+                            th:text="${user.getFirstName()}">
+                    </td>
+                    <td
+                            th:text="${user.getLastName()}">Last name
+                    </td>
+                    <td
+                            th:text="${user.getAge()}">Age
+                    </td>
+                    <td
+                            th:text="${user.getUsername()}">
+                    </td>
+                    <td
+                            th:text="${userRolesPrefixFree}">
+                        <!--                        <p th:each="role : ${user.roles}">-->
+                        <!--                            <span th:text="${role.role}"></span>-->
+                        <!--                        </p>-->
+                    </td>
+
+                </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+
+    .container1 {
+        margin-left: 0;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .border {
+        border: 1px solid #d6dade !important;
+    }
+
+    .container-fluid {
+        display: flex;
+        padding-right: 0;
+        padding-left: 0;
+
+    }
+
+    .btn-dark {
+        color: #929eaa;
+        background-color: #212529;
+        border-color: #212529;
+    }
+
+    .container2 {
+        display: grid;
+    }
+
+    .btn {
+        text-align: left;
+    }
+
+    .container3 {
+
+        margin-right: 35px;
+        margin-left: 15px;
+        background-color: white;
+        padding-top: 30px;
+        padding-bottom: 30px;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"
+        integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js"
+        integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc"
+        crossorigin="anonymous"></script>
 
 </body>
 </html>
